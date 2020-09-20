@@ -3,6 +3,6 @@ final project
 Group 9
 
 Group Member: 
-Jiahui Tang
-Wenqi Chen
-Yujie Cai
+* Jiahui Tang
+* Wenqi Chen
+* Yujie Cai
