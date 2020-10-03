@@ -8,14 +8,12 @@ install:
   - pip install codecov
 
 script:
-#  - coverage run tests.py
-#  - py.test --cov-report term --cov=app/test/
+  - coverage run tests.py
 
 env:
   - CODECOV_TOKEN="a5eba927-4bc1-4847-9dab-6b457c1cf000"
 
 after_success:
   - codecov
-  - bash <(curl -s https://codecov.io/bash)
 
 
