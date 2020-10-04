@@ -1,0 +1,19 @@
+# set the build language to Python
+language: python
+
+# set the python version to 3.6
+python: 3.6
+
+install:
+  - pip install codecov
+
+script:
+  - coverage run test.py
+
+env:
+  - CODECOV_TOKEN="a5eba927-4bc1-4847-9dab-6b457c1cf000"
+
+after_success:
+  - codecov
+
+
