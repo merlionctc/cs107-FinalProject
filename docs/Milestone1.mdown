@@ -23,7 +23,7 @@ We developed this package, `package_name`,  in the light of automatic differenti
 
 Formally, for single variable case, the derivative of a function, if it exists, is defined as
 
-$$ f'(x) = \lim_{h\to0} \frac{f(a+h) - f(a)}{h} ​$$
+$` f'(x) = \lim_{h\to0} \frac{f(a+h) - f(a)}{h} ​`$
 
 to visualize, is the slope of the tangent line to the graph of the function at that point. The tangent line is the best linear approximation of the function near that input value.
 
