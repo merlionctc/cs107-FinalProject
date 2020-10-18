@@ -1,0 +1,374 @@
+# Milestone 1
+@merlionctc
+
+**Table of Contents**
+- [1. Introduction](#1-introduction)
+  - [1.1 Derivative](#11derivative)
+  - [1.2 Automatic Differentiation](#12automatuic-differentiation)
+- [2. Background](#Background)
+- [3. Usage](#Usage)
+  - [3.1 Installation](#31Installation)
+  - [3.2 How to use](#21How-to-use-)
+- [4. Software organization](#Software-Organization)
+- [5. Implementation](#Implementation)
+
+
+
+
+## 1.Introduction
+
+We developed this package, `package_name`,  in the light of automatic differentiation. The package can help to automatically differentiate a function input into the program. The package includes modules of forward-mode differentiation and backward-mode differentiation.
+
+### 1.1 Derivatives
+
+Formally, for single variable case, the derivative of a function, if it exists, is defined as
+
+$$ f'(x) = \lim_{h\to0} \frac{f(a+h) - f(a)}{h} ​$$
+
+to visualize, is the slope of the tangent line to the graph of the function at that point. The tangent line is the best linear approximation of the function near that input value.
+
+Of course, derivatives may be generalized to functions of several real variables, and derivatives are useful in finding the maxima and minima of functions. Derivatives has a variety of applications in statistics and machine learning, and the process of finding a derivative is called *differentiation*.
+
+There are three ways of differentiation realized in computer science:
+- Numerical differentiation
+- Symbolic differentiation
+- Automatic differentiaton
+
+
+### 1.2 Auto Differentiation
+Automatic differentiation (AD), also called as algorithmic differentiation, is a set of techniques for efficiently and accurately evaluating derivatives of numeric functions expressed as computer programs <sup>1</sup>. It is not numerical differentiation, since numerical differentiation is the finite difference approximation of derivatives using the values of the original function evaluated at some sample points<sup>2</sup>. It is different from symbolic differentiation, since symbolic differentiation is the automatic manipulation of expressions for obtaining derivative expression<sup>3</sup>.
+
+The essence of AD is that all numerical computations are ultimately compositions of a finite set of elementary operations for which the derivatives are easily known<sup>4</sup>. The algorithm of AD breaks down a function by looking at the sequence of elementary arithmetic operations (addition, subtraction, multiplication and division) and elementary functions (exponential, logrithmatic, and trigonometry). By applying the chain rule repeatedly to these operations, derivatives of arbitrary order can be computed automatically, accurately to machine accuracy.
+
+This differentiation technique well-established and used with applications in different areas such as fluid dynamics, astronomy, and engineering design optimization.
+
+To sum up, there are two major advantages of using AD:
+- Computes derivatives to machine precision.
+- Does not rely on extensive mathematical derivations or expression trees, so it is easily applicable to a wide class of functions.
+
+## 2. Background
+
+Automatic differentiation relies on several vital mathematical foundations, some of which will be illustrated at this part. Based on these conceptions, it will be more resonable for users to understand the software.
+
+### 2.1 Chain Rule
+
+Chain Rule is the most important concept in AD. It enables us to deal with complex functions with several layers and arguments. With implementing chain rule, we can easily divide the original complicated functions into basic parts made up with elementary functions, of which we will know the concrete derivative expressions.
+
+Suppose there is a function $h\left(u\left(t\right)\right)​$ and in order to calculate derivative of $h​$ with respect to $t​$, we should use chain rule. The derivative is $$\dfrac{\partial h}{\partial t} = \dfrac{\partial h}{\partial u}\dfrac{\partial u}{\partial t}.​$$
+
+In general, if a function $h$ has several arguments, or even its argument is a vector, so that $h = h(x(t))$ where  $x \in R^n$ and $t \in R^m $. In this way, $h$ is now the combination of $n$ functions, each of which has $m$ variables. The derivative of $h$ is now
+
+ $$    \nabla_{t}h = \sum_{i=1}^{n}{\frac{\partial h}{\partial x_{i}}\nabla y_{i}\left(t\right)}.$$
+
+### 2.2 Elementary functions
+
+Any complex function is made up with several elementary functions. As discussed above, we use chain rule to break it down and then focus on elementary functions to calulate their derivatives. 
+
+In mathematics, an elementary function is a function of a single variable composed of particular simple functions. Elementary functions are typically defined as a sum, product and/or composition of many polynomials, rational functions, trigonometric and exponential functions, and their inverse functions.<sup>5</sup>
+
+On the other hand, we know the concrete mathematical expression of the elementary functions, which will be used directly in the later graph structure of calculations. 
+
+### 2.3 Graph structure of calculations
+
+Take the example of $g = (x+y)*z$, we will first demonstrate the evaluation trace and then its corresponding computational graph.
+
+#### 2.3.1 Evaluation trace
+
+Let's evaluate g at the point (1,1,1). In the evaluation trace table, we will record the trace of each step, its  elementary operation as well as the corresponding numeric value at the point.
+
+| Trace | Elementary Operation | Numeric Value |
+| ----- | -------------------- | ------------- |
+| $x$   | 1                    | 1             |
+| $y$   | 1                    | 1             |
+| $z$   | 1                    | 1             |
+| $p$   | $x+y$                | 2             |
+| $f$   | $v_1*z$              | 2             |
+
+#### 2.3.2 Computational graph
+
+The above evaluation trace can be easily visualized with the computational graph below. The node will represent the trace and the edge will represent the elementary operation.
+
+![title](computational_graph.png)
+
+### 2.4 Forward mode and Reverse mode
+
+#### 2.4.1 Forward mode
+
+The evaluation trace above is just the path we will follow in forward mode. On top of that, we will also carry the derivatives. And we will take the derivative of g on x.
+
+| Trace | Elementary Operation | Numeric Value | Deri. on x    | Deri. Value on x |
+| ----- | -------------------- | ------------- | ------------- | ---------------- |
+| $x$   | 1                    | 1             | 1             | 1                |
+| $y$   | 1                    | 1             | 0             | 0                |
+| $z$   | 1                    | 1             | 0             | 0                |
+| $v_1$ | $x+y$                | 2             | $\dot{x}$     | 1                |
+| $f$   | $v_1*z$              | 2             | $\dot{v_1}*z$ | 1                |
+
+#### 2.4.1 Reverse mode
+
+It should be noticed that in forward mode, chain rule is not utilized. We just follow the evaluation trace and combine the derivatives of elementary functions together. But for reverse mode, we will implement chain rule. 
+
+However, it is important to realize that the reverse mode also requires the evaluation trace on forward mode to have the derivatives on the elementary functions. Then we will use chain rule to reversely calculate the final derivative.
+
+- STEP1: Start with $v_1$
+
+   $$\overline{v_1} = \dfrac{\partial f}{\partial v_1} = 1.​$$
+
+- STEP2: Use chain rule to calculate$\overline{x}$
+
+   $$\overline{x} = \dfrac{\partial f}{\partial v_1}\dfrac{\partial v_1}{\partial x}  = 1.​$$
+
+- STEP3: Get the derivative on x
+
+   $$\overline{x} = \dfrac{\partial f}{\partial x}  = 1.$$
+
+  
+
+
+## Usage
+
+
+ ### 3.1 Installation
+ 
+The package will be distributed through PyPI.
+
+To install AutoDiff using pip:
+
+ ```pip install AutoDiff```
+
+This will also install NumPy and Parser as dependency.
+
+
+ 
+ ### 3.2 How to Use
+
+Here is an example that serves that a quick start tutorial.
+
+
+ ```
+# The standard way to import AutoDiff:
+import AutoDiff as ad
+
+# Create a function:
+f = '(x+y)*z'
+var = {"x": 1, "y": 2, "z": 3}
+
+# instantiate AD objects
+fwd = ad.Forward(f, var)
+rvs = ad.Reverse(f, var)
+fwd.get_value()
+rvs.get_value()
+
+# Jacobian
+f_jcb = ['x+x*exp(y)','sin(x)+y*cos(x)']
+var_jcb = {"x": 4, "y": 3}
+fwd_jcb = ad.Forward(f_jcb, var_jcb)
+rvs_jcb = ad.Reverse(f_jcb, var_jcb)
+fwd_jcb.get_jacobian()
+rvs_jcb.get_jacobian()
+
+```
+
+
+There are x public functions of this API:
+
+`Forward(AutoDiff)`: Class that does forward mode differentiation of the function
+
+`Reverse(AutoDiff)`: Class that does reverse mode differentiation of the function
+
+`get_value()`: Getting value of differentation results
+
+`get_jacobian()`: Getting Jacobian matrix of differentiation results. To get Jacobian, the input must be a 2-D numpy array, which gives an output of 2-D numpy array.
+
+
+
+
+## Software Organization
+
+Discuss how you plan on organizing your software package.
+
+* Directory Structure
+
+```
+project
+│   README.md
+│   .travis.yml  
+│   LICENSE
+│
+└───AutoDiff
+│   │   README.md
+│   │   Func Parser (module)
+│   │   Forward mode (class)
+│   │   Reverse mode (class)
+│   │   Interface
+│   └───subfolder1
+│       │   file111.txt
+│       │   file112.txt
+│       │   ...
+│
+└───Test suite
+│   │   README.md
+│   │   Func Parser Test
+│   │   Forward mode Test
+│   │   Reverse mode Test
+│   │   Interface Test
+│   │   ...
+└───Docs
+│   │   README.md
+│   │   milestone1.md
+
+```
+
+* Modules to include
+
+ math: mathematical, algebric operations
+
+ numpy: supports computations for large, multi-dimensional arrays and matrices. 
+
+ [parser](https://docs.python.org/3.0/library/parser.html): we will build on this standard library `parser` to parse 
+ the function string into expression tree. Currently, this parser only handles parsing and evaluating basic arithmetic operations with numbers. 
+ We will also use Numpy and Math for evaluating formulas.
+
+
+* Test suite design
+
+ The test suite will be included in the Test suite sub-directory. And both TravisCI and Coveralls will be used to check the codes coverage and test integration.
+
+
+* Package distribution
+
+ PyPI will be used to distribute the package.
+  
+
+* How will you package your software? Will you use a framework? If so, which one and why? If not, why not?
+
+  We will package our software using [Python Package Index (PyPi)](https://pypi.org/),
+  and following Package Python Projects [Tutorial](https://packaging.python.org/tutorials/packaging-projects/)
+  
+
+
+
+
+## Implementation
+
+Discuss how you plan on implementing the forward mode of automatic differentiation.
+
+* Core data structures
+
+  The user can input a string as the function expression. We will then use the above cited parser package to parse the formula. 
+  Then a formula data structure will then be created, encoding the user's input as an abstract syntax tree. In this way, we will implement the  evaluation and differentiation.
+
+
+* Implemented classes
+
+  * Forward mode: This class will implement differention and calculate derivatives through forward mode.
+
+  * Reverse mode: This class will implement chain rule to calculate derivatives through reverse mode.
+
+  * Elementary function: This class will overwrite and redefine the parsed string as elementary functions.
+
+ 
+* Method and attributes of the classes
+
+  * Forward mode: 
+```
+  def __init__(self, f, var):
+     self.f = f
+     self.var = var
+     
+  def get_value(self, **kwargs):
+   ## **kwargs: var = 'all','x','y' etc.
+   ## all will be 
+   ## calculate the derivative of f on var through forward mode to specific value
+     return self.diff
+     
+  def get_jacobian(self, **kwargs):
+   ## **kwargs: var = 'all','x','y' etc.
+   ## calculate the derivative of f on var through forward mode with jacobian
+     return self.diff
+     
+  def get_expression(self, **kwargs):
+   ## **kwargs: var = 'all','x','y' etc.
+   ## return the list of derivative expression of the parsed formula.
+     return self.express
+```
+  * Reverse mode:
+```
+  def __init__(self, f, var):
+     self.f = f
+     self.var = var
+     
+  def get_value(self, **kwargs):
+   ## **kwargs: var = 'all','x','y' etc.
+   ## all
+   ## calculate the derivative of f on var through reverse mode to specific value
+     return self.diff
+     
+  def get_jacobian(self, **kwargs):
+   ## **kwargs: var = 'all','x','y' etc.
+   ## calculate the derivative of f on var through reverse mode with jacobian
+     return self.diff
+     
+  def get_expression(self, **kwargs):
+   ## **kwargs: var = 'all','x','y' etc.
+   ## return the list of derivative expression of the parsed formula.
+     return self.express
+```
+
+
+
+   
+
+ 
+
+ 
+ - 
+  * Elementary function :
+  
+  Since we parse the string expression into a tree, we expect to let the computer recognize elementary
+  function and evaluate into expressions or numerical values. The methods are the followings:
+ 
+``` 
+ __init__
+ sin()
+ cos()
+ exp()
+ pow()
+ log()
+ ...
+
+ 
+ def __init__(self):
+
+ def sin(self):
+     return ##the expression of a expression
+
+```
+
+
+* External dependencies
+
+  As we mentioned in the Software Organization - Modules to include, we will use standard library `parser` and 
+  extend it to parse the function entered as string. Also, the project will highly rely on `numpy` and `math`.
+
+* How will you deal with elementary functions like sin, sqrt, log, and exp (and all the others)?
+
+  We will parse the string and use Regex to match a pre-defined elementary functions. 
+  A pre-defined class will implement all relevant operators and elementary functions using Python `math` library.
+  Some special number such as `pi` and `e` will also be included in the class as pre defined constant.
+
+
+
+
+
+#### reference
+[[1]](https://www.jmlr.org/papers/volume18/17-468/17-468.pdf): Baydin, Atilim Gunes; Pearlmutter, Barak; Radul, Alexey Andreyevich; Siskind, Jeffrey (2018). "Automatic differentiation in machine learning: a survey". Journal of Machine Learning Research. 18: 1–43.
+
+[[2]](https://fac.ksu.edu.sa/sites/default/files/numerical_analysis_9th.pdf):Rirchard L. Burden and J. Douglas Faires. Numerical Analysis. Brooks/Cole, 2001.
+
+[[3]](https://www.springer.com/gp/book/9783540654667):Johannes Grabmeier and Erich Kaltofen. Computer Algebra Handbook: Foundations, Applications, Systems. Springer, 2003
+
+[[4]](https://www.jstor.org/stable/24103956): Arun Verma. An introduction to automatic differentiation. Current Science, 78(7):804–7,
+2000.
+
+[[5]](https://www.worldcat.org/oclc/31441929):  Spivak, Michael. (1994). *Calculus* (3rd ed.). Houston, Tex.: Publish or Perish. p. 359.
