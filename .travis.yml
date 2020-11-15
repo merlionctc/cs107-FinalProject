@@ -8,9 +8,8 @@ install:
   - pip install pytest pytest-cov
   - pip install codecov
 
-
 script:
-  - pytest --cov=./test_suite/
+  - pytest --cov=./
 
 env:
   - CODECOV_TOKEN="a5eba927-4bc1-4847-9dab-6b457c1cf000"
