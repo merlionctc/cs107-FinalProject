@@ -61,9 +61,10 @@ def test_autodiff():
         except:
             pass
 
-    
     test_get_value()
     test_get_der()
+    test_jacobian()
+    test_get_expression()
     print("Pass auto diff!")
 
 def test_simplify():
