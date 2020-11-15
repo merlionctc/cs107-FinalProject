@@ -1,6 +1,8 @@
 import sys
 sys.path.append('./autodiff')
 
+import pytest
+
 from dual_class import *
 from autodiff import *
 from elementary import *

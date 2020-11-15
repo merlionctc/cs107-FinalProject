@@ -5,12 +5,12 @@ language: python
 python: 3.6
 
 install:
+  - pip install pytest pytest-cov
   - pip install codecov
 
+
 script:
-  - coverage run test_suite/autodiff_test.py
-  - coverage run test_suite/dual_class_test.py
-  - coverage run test_suite/elementary_test.py
+  - pytest --cov=./test_suite/
 
 env:
   - CODECOV_TOKEN="a5eba927-4bc1-4847-9dab-6b457c1cf000"
