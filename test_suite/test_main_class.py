@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../')
+sys.path.append('../autodiff/')
 
 from dual_class import *
 from autodiff import *
