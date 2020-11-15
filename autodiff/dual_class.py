@@ -13,7 +13,7 @@ class Dual():
         
     ### dunder methods###
     def __repr__(self):
-        pass
+        return "{class_name}(value={value}, derivative={der})".format(class_name=type(self).__name__, value=self.val, der=self.der)
         
     ### dunder method of math operation###
     def __pos__(self):
@@ -46,13 +46,13 @@ class Dual():
         return Dual(val,der)
 
     def __rsub__(self,other):
-        try:
-            val = -self.val + other.val
-            der = -self.der + other.der
+        #try:
+            #val = -self.val + other.val
+            #der = -self.der + other.der
         
-        except AttributeError:
-            val = -self.val + other
-            der = - self.der
+        #except AttributeError:
+        val = -self.val + other
+        der = - self.der
         
         return Dual(val,der)
 
@@ -78,12 +78,12 @@ class Dual():
         return Dual(val, der)
 
     def __rtruediv__(self, other):
-        try:
-            val = (self.val*other.val)/other.val**2
-            der = (-self.der*other.val )/self.val**2
-        except AttributeError:
-            val = (self.val*other)/self.val**2
-            der = (-self.der*other)/self.val**2
+        #try:
+            #val = (self.val*other.val)/other.val**2
+            #der = (-self.der*other.val )/self.val**2
+        #except AttributeError:
+        val = (self.val*other)/self.val**2
+        der = (-self.der*other)/self.val**2
         return Dual(val, der)
 
     # exponentiate a dual number by a real or dual number, self is dual, other is dual or real
@@ -106,28 +106,5 @@ class Dual():
     def __rpow__(self, other):
         temp = np.log(other) * other ** self.val * self.der
         return Dual(other ** self.val, temp)
-        
- 
-    '''
-    def __pow__(self, other):
-        print("__pow__")
-        a = exp(other*log(self))
-        #print(a.val)
-        #print(a.der)
-        return exp(other*log(self))
-
-    
-'''
-    """
-    def __pow__(self,power):
-        val = self.val ** power
-        der = power*self.val**(power-1)*self.der
-        return Dual(val,der)
-    
-    def __rpow__(self,base):
-        val = base**self.val
-        der = np.log(base)*(base**self.val)*self.der
-        return Dual(val,der)
-    """
 
 from elementary import *
