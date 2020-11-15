@@ -1,5 +1,8 @@
 import sys
 sys.path.append('./autodiff')
+
+import pytest
+
 from dual_class import *
 import numpy as np
 import math
