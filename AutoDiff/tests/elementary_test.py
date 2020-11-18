@@ -53,30 +53,34 @@ def test_elementary():
     def test_sqrt():
         x = Dual(4,1)
         z = sqrt(x)
-        x_real = 4
+        x_real = sqrt(4)
         assert z.val == 2
         assert z.der == 0.5*4**(-0.5)
+        assert x_real == np.sqrt(4)
 
     def test_arcsin():
         x = Dual(0.5,1)
         z = arcsin(x)
-        x_real = 0.5
+        x_real = arcsin(0.5)
         assert z.val == np.arcsin(0.5)
         assert z.der == 1/np.sqrt(1-0.5**2)
+        assert x_real == np.arcsin(0.5)
 
-    def test_arcccos():
+    def test_arccos():
         x = Dual(0.5,1)
         z = arccos(x)
-        x_real = 0.5
+        x_real = arccos(0.5)
         assert z.val == np.arccos(0.5)
         assert z.der == -1/np.sqrt(1-0.5**2)
+        assert x_real == np.arccos(0.5)
 
     def test_arctan():
         x = Dual(1,1)
         z = arctan(x)
-        x_real = 1
+        x_real = arctan(1)
         assert z.val == np.arctan(1)
         assert z.der == 0.5
+        assert x_real == arctan(1)
 
 
 
@@ -87,7 +91,7 @@ def test_elementary():
     test_log()
     test_sqrt()
     test_arcsin()
-    test_arcccos()
+    test_arccos()
     test_arctan()
     print("Pass elementary!")
 

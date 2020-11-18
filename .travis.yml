@@ -9,9 +9,7 @@ install:
   - pip install codecov
 
 script:
-  - pytest --cov=./AutoDiff/src/autodiff/dual.py
-  - pytest --cov=./AutoDiff/src/autodiff/elementary.py
-  - pytest --cov=./AutoDiff/src/autodiff/model.py
+  - pytest --cov=./AutoDiff/src/autodiff/.
 
 env:
   - CODECOV_TOKEN="a5eba927-4bc1-4847-9dab-6b457c1cf000"
