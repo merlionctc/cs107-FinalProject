@@ -68,8 +68,9 @@ class Forward(AutoDiff):
         return result
      
     def get_jacobian(self, *args):
-        ''' **kwargs: var = 'all','x','y' etc.
-        calculate the derivative of f on var through forward mode with jacobian'''
+        ''' jacobian(2*x + 3*y + 4*z, [x, y, z])
+            ans =
+                    [ 2, 3, 4]'''
         raise NotImplementedError 
      
     def get_expression(self, *args):

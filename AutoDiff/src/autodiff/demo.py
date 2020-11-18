@@ -1,5 +1,5 @@
 from model import *
-from dual_class import *
+from dual import *
 from elementary import *
 
 # First Step: User instantiate variables
