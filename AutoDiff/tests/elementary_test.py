@@ -1,9 +1,9 @@
 import sys
-sys.path.append('./autodiff')
+sys.path.append('AutoDiff/src/autodiff')
 
 import pytest
 
-from dual_class import *
+from dual import *
 from elementary import *
 import numpy as np
 import math
@@ -50,11 +50,45 @@ def test_elementary():
         assert z.der == 1
         assert x_real == np.log(5)
 
+    def test_sqrt():
+        x = Dual(4,1)
+        z = sqrt(x)
+        x_real = 4
+        assert z.val == 2
+        assert z.der == 0.5*4**(-0.5)
+
+    def test_arcsin():
+        x = Dual(0.5,1)
+        z = arcsin(x)
+        x_real = 0.5
+        assert z.val == np.arcsin(0.5)
+        assert z.der == 1/np.sqrt(1-0.5**2)
+
+    def test_arcccos():
+        x = Dual(0.5,1)
+        z = arccos(x)
+        x_real = 0.5
+        assert z.val == np.arccos(0.5)
+        assert z.der == -1/np.sqrt(1-0.5**2)
+
+    def test_arctan():
+        x = Dual(1,1)
+        z = arctan(x)
+        x_real = 1
+        assert z.val == np.arctan(1)
+        assert z.der == 0.5
+
+
+
     test_exp()
     test_sin()
     test_cos()
     test_tan()
     test_log()
+    test_sqrt()
+    test_arcsin()
+    test_arcccos()
+    test_arctan()
     print("Pass elementary!")
 
 test_elementary()

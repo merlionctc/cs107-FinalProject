@@ -1,10 +1,10 @@
 import sys
-sys.path.append('./autodiff')
+sys.path.append('AutoDiff/src/autodiff')
 
 import pytest
 
-from dual_class import *
-from autodiff import *
+from dual import *
+from model import *
 from elementary import *
 import numpy as np
 import math
@@ -24,6 +24,7 @@ def test_autodiff():
 
         f2 = 3 * sin(x2) + 8 * y2 ** 3 + z2**2
         fwd_test_2 = Forward(f2)
+
 
         assert fwd_test_1.get_value() == 14
         assert fwd_test_2.get_value() == 89
