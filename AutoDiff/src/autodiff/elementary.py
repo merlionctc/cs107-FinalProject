@@ -128,4 +128,4 @@ def arctan(dual):
         return np.arctan(dual)
 
 
-from dual import *
+from autodiff.dual import *

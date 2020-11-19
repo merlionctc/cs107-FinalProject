@@ -1,6 +1,9 @@
-from model import *
-from dual import *
-from elementary import *
+#import sys
+#sys.path.append('AutoDiff/src/autodiff')
+
+from autodiff.model import *
+from autodiff.dual import *
+from autodiff.elementary import *
 
 # First Step: User instantiate variables
 # val: value of variable that you start with
@@ -32,22 +35,15 @@ print(fwd_test.get_der(x1))
 
 ################### Root Finding via Newton's Method #################
 
-val = 0
+val = 1
 x2 = Dual(val = val, der=1)
-
-def func(x):   
-    f = 2*sin(x) + x**2
-    return f
-
 f_grad = Forward(2*sin(x2) + x2**2)
 
-while abs(func(val)) > 1e-5:
-    val = val + f_grad.get_der()
-    x2 = Dual(val = val, der=1)
+while abs(f_grad.get_value()) > 1e-5:
+    x2 = x2 - f_grad.get_value()/f_grad.get_der()
     f_grad = Forward(2*sin(x2) + x2**2)
 
 print("Root found! The root is ", x2.val)
-
 
 
 

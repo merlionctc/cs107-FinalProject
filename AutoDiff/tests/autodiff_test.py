@@ -1,11 +1,11 @@
-import sys
-sys.path.append('AutoDiff/src/autodiff')
+#import sys
+#sys.path.append('AutoDiff/src/autodiff')
 
 import pytest
 
-from dual import *
-from model import *
-from elementary import *
+from autodiff.dual import *
+from autodiff.model import *
+from autodiff.elementary import *
 import numpy as np
 import math
 
