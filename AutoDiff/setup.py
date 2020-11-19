@@ -41,7 +41,3 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
 )
-
-
-if __name__ == "__main__":
-    setuptools.setup(use_pyscaffold=True)
