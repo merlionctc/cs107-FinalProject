@@ -7,6 +7,7 @@ python: 3.6
 install:
   - pip install pytest pytest-cov
   - pip install codecov
+  - pip install -e AutoDiff
 
 script:
   - cd AutoDiff 
