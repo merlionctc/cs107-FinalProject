@@ -7,6 +7,7 @@ python: 3.6
 install:
   - pip install pytest pytest-cov
   - pip install codecov
+  - pip install autodiff_merlionctc-0.0.1-py2.py3-none-any.whl
 
 script:
   - pytest --cov=./AutoDiff/src/autodiff/.

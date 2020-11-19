@@ -419,4 +419,4 @@ class Dual():
         temp = np.log(other) * other ** self.val * self.der
         return Dual(other ** self.val, temp)
 
-from elementary import *
+from autodiff.elementary import *
