@@ -20,6 +20,16 @@ def test_symbolic():
         assert math.isclose(diff(f1, x1).evaluate(values), -3)
         assert math.isclose(diff(f1, y1).evaluate(values), -4)
         assert math.isclose(diff(f1, z1).evaluate(values), 1)
+        assert math.isclose(diff(1, x1), 0)
+        assert math.isclose(diff(1.0, x1), 0)
+
+    def test_get_higher_order_der():
+        x, y = symbols('x y')
+        f = x ** 3
+        f2 = (x ** 2) * (y ** 2)
+        values = {x: 5, y: 4}
+        assert math.isclose(diff(f, x, x).evaluate(values), 30)
+        assert math.isclose(diff(f2, x, y).evaluate(values), 80)
 
     def test_jacobian():
         x, y, z = symbols('x y z')
@@ -28,12 +38,26 @@ def test_symbolic():
         values = {x: math.pi, y: 2, z: 5}
         assert get_jacobian_value([f1, f2], [x, y, z], values) == [[3., 8., -1.], [-3., 96., 10.]]
 
+        values_set_2 = {x: math.pi, y: math.pi / 2, z: 0}
+        f3 = 3 * sin(x) + 4 * cos(y) + exp(z)
+        assert np.allclose(get_jacobian_value([f3], [x, y, z], values_set_2), [-3, -4, 1.])
+        assert np.allclose(get_jacobian_value([f3], [z], values_set_2), [1.])
+        assert np.allclose(get_jacobian_value([f3], [x, y], values_set_2), [-3, -4])
+
+        # test multiple func
+        f4 = 6 * sin(x) + cos(y) ** 3 + z ** 2
+        assert np.allclose(get_jacobian_value([f3, f4], [x, y, z], values_set_2),
+                           [[-3.00000000e+00, -4.00000000e+00, 1.00000000e+00],
+                            [-6.00000000e+00, -1.12481984e-32, 0.00000000e+00]])
+        assert np.allclose(get_jacobian_value([f3, f4], [z], values_set_2), [[1.], [0.]])
+        assert np.allclose(get_jacobian_value([f3, f4], [y, x], values_set_2),
+                           [[-4.00000000e+00, -3.00000000e+00], [-1.12481984e-32, -6.00000000e+00]])
+
     def test_get_expression():
         x, y, z = symbols('x y z')
         f1 = 2 ** cos(x)
         assert str(f1) == "(2)^(cos(x))"
-        assert str(
-            diff(f1, x)) == "((2)^(cos(x)))*(((((1)*(sin(x)))*(-1))*(ln(2)))+(((cos(x))*(0))/(2)))"
+        assert str(diff(f1, x)) == "((((1)*(sin(x)))*(-1))*(ln(2)))*((2)^(cos(x)))"
 
     def test_call():
         x = symbols('x')
@@ -45,7 +69,7 @@ def test_symbolic():
         f = (log(x) + logb(x, x) - x) / x * x ** 2 + sin(cos(tan(x))) + sinh(cosh(tanh(x))) + arcsin(arccos(arctan(x)))
         expected = "(((((((ln(x))+((ln(x))/(ln(x))))+((-1)*(x)))/(x))*((x)^(2)))+(sin(cos(tan(x)))))+(sinh(cosh(tanh(x)))))+(arcsin(arccos(arctan(x))))"
         assert str(f) == expected
-        diff_expected = "(((((((((((1)/(x))+(((((1)/(x))*(ln(x)))+((-1)*((ln(x))*((1)/(x)))))/((ln(x))*(ln(x)))))+(((0)*(x))+((-1)*(1))))*(x))+((-1)*((((ln(x))+((ln(x))/(ln(x))))+((-1)*(x)))*(1))))/((x)*(x)))*((x)^(2)))+(((((ln(x))+((ln(x))/(ln(x))))+((-1)*(x)))/(x))*(((x)^(2))*(((0)*(ln(x)))+(((2)*(1))/(x))))))+(((((1)/((cos(x))*(cos(x))))*(sin(tan(x))))*(-1))*(cos(cos(tan(x))))))+((((1)/((cosh(x))*(cosh(x))))*(sinh(tanh(x))))*(cosh(cosh(tanh(x))))))+(((((1)*((1)/(((x)*(x))+(1))))*((1)/(((1)+((-1)*((arctan(x))*(arctan(x)))))^(0.5))))*(-1))*((1)/(((1)+((-1)*((arccos(arctan(x)))*(arccos(arctan(x))))))^(0.5))))"
+        diff_expected = "(((((((((((1)/(x))+(((((1)/(x))*(ln(x)))+((-1)*((ln(x))*((1)/(x)))))/((ln(x))*(ln(x)))))+(((0)*(x))+((-1)*(1))))*(x))+((-1)*((((ln(x))+((ln(x))/(ln(x))))+((-1)*(x)))*(1))))/((x)*(x)))*((x)^(2)))+(((((ln(x))+((ln(x))/(ln(x))))+((-1)*(x)))/(x))*(((1)*(2))*((x)^(1)))))+(((((1)/((cos(x))*(cos(x))))*(sin(tan(x))))*(-1))*(cos(cos(tan(x))))))+((((1)/((cosh(x))*(cosh(x))))*(sinh(tanh(x))))*(cosh(cosh(tanh(x))))))+(((((1)*((1)/(((x)*(x))+(1))))*((1)/(((1)+((-1)*((arctan(x))*(arctan(x)))))^(0.5))))*(-1))*((1)/(((1)+((-1)*((arccos(arctan(x)))*(arccos(arctan(x))))))^(0.5))))"
         assert str(diff(f, x)) == diff_expected
 
     def test_div():
@@ -152,6 +176,7 @@ def test_symbolic():
 
     test_get_value()
     test_get_der()
+    test_get_higher_order_der()
     test_jacobian()
     test_get_expression()
     test_call()

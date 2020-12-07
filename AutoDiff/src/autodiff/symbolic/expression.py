@@ -170,13 +170,30 @@ class LnExpression(Expression):
 
 class PowerExpression(Expression):
     def __init__(self, exponent: Expression, base: Expression = Constant(math.e)):
-        self.base = base
-        self.exponent = exponent
+        # TODO: do it correctly ;)
+
+        # If base is a constant (defined by it can be evaluated without value), replace it with a Constant.
+        try:
+            self.base = Constant(base.evaluate({}))
+        except AssertionError:
+            self.base = base
+        # Do similar thing for exponent
+        try:
+            self.exponent = Constant(exponent.evaluate({}))
+        except AssertionError:
+            self.exponent = exponent
 
     def evaluate(self, values):
         return self.base.evaluate(values) ** self.exponent.evaluate(values)
 
     def _symdiff(self, respect_to):
+        # Shortcut for cases where one of exponent, base is constant.
+        if isinstance(self.exponent, Constant) and isinstance(self.base, Constant):
+            return Constant(0)
+        if isinstance(self.exponent, Constant):
+            return self.base._symdiff(respect_to) * self.exponent * self.base ** (self.exponent - 1)
+        if isinstance(self.base, Constant):
+            return self.exponent._symdiff(respect_to) * LnExpression(self.base) * self
         return self * (
             self.exponent._symdiff(respect_to) * LnExpression(self.base) + self.exponent * self.base._symdiff(
                 respect_to) / self.base)
