@@ -419,4 +419,153 @@ class Dual():
         temp = np.log(other) * other ** self.val * self.der
         return Dual(other ** self.val, temp)
 
+
+    # equal dunder method
+    def __eq__(self, other):
+        """Returns boolean if two objects have equal value
+        
+        Parameters
+        ----------
+        self: Dual object
+        other: Dual object, float, or int
+        
+        Returns
+        ------- 
+        Boolean: True or False
+        
+        Examples
+        -------- 
+        >>> x =  Dual(1,1)
+        >>> y =  Dual(2,1)
+        >>> print(x==y)
+        False
+        """
+        try:
+            return (self.val == other.val)
+        except AttributeError:
+            return (self.val == other)
+
+    def __ne__(self, other):
+        """Returns boolean if two objects DO NOT have equal value
+        
+        Parameters
+        ----------
+        self: Dual object
+        other: Dual object, float, or int
+        
+        Returns
+        ------- 
+        Boolean: True or False
+        
+        Examples
+        -------- 
+        >>> x =  Dual(1,1)
+        >>> y =  Dual(2,1)
+        >>> print(x!=y)
+        True
+        """
+        try:
+            return not (self.val == other.val)
+        except AttributeError:
+            return not (self.val == other)
+
+    # comparison dunder method
+    def __lt__(self, other):
+        """Returns boolean if the former object is less than the latter.
+        
+        Parameters
+        ----------
+        self: Dual object
+        other: Dual object, float, or int
+        
+        Returns
+        ------- 
+        Boolean: True or False
+        
+        Examples
+        -------- 
+        >>> x =  Dual(2,1)
+        >>> y =  Dual(2,1)
+        >>> print(x<y)
+        False
+        """
+        try:
+            return (self.val < other.val)
+        except AttributeError:
+            return (self.val < other)
+
+    def __le__(self, other):
+        """Returns boolean if the former object is less than or equal to the latter.
+        
+        Parameters
+        ----------
+        self: Dual object
+        other: Dual object, float, or int
+        
+        Returns
+        ------- 
+        Boolean: True or False
+        
+        Examples
+        -------- 
+        >>> x =  Dual(1,1)
+        >>> y =  Dual(2,1)
+        >>> print(x<=y)
+        True
+        """
+        try:
+            return (self.val <= other.val)
+        except AttributeError:
+            return (self.val <= other)
+
+    def __gt__(self, other):
+        """Returns boolean if the former object is greater than the latter.
+        
+        Parameters
+        ----------
+        self: Dual object
+        other: Dual object, float, or int
+        
+        Returns
+        ------- 
+        Boolean: True or False
+        
+        Examples
+        -------- 
+        >>> x =  Dual(2,1)
+        >>> y =  Dual(2,1)
+        >>> print(x>y)
+        False
+        """
+        try:
+            return (self.val > other.val)
+        except AttributeError:
+            return (self.val > other)
+
+    def __ge__(self, other):
+        """Returns boolean if the former object is greater than or equal to the latter.
+        
+        Parameters
+        ----------
+        self: Dual object
+        other: Dual object, float, or int
+        
+        Returns
+        ------- 
+        Boolean: True or False
+        
+        Examples
+        -------- 
+        >>> x =  Dual(2,1)
+        >>> y =  Dual(1,1)
+        >>> print(x>= y)
+        True
+        """
+        try:
+            return (self.val >= other.val)
+        except AttributeError:
+            return (self.val >= other)
+
+
+
 from autodiff.elementary import *
