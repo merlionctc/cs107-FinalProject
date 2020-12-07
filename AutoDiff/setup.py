@@ -19,7 +19,6 @@ except VersionConflict:
     print("Error: version of setuptools is too old (<38.3)!")
     sys.exit(1)
 
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -39,5 +38,9 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    install_requires=[
+        'numpy',
+    ],
+    python_requires='>=3.7',
+
 )
