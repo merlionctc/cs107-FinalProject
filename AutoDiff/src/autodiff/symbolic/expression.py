@@ -1,15 +1,20 @@
+from __future__ import annotations
+
 import math
 
 
 class Expression:
-    def evaluate(self, values):
+    def evaluate(self, values: dict[Symbol, float]) -> float:
         '''
         Evaluate the value of this Expression with the given values of variables.
         '''
         raise NotImplementedError()
 
-    def _symdiff(self, respect_to):
+    def _symdiff(self, respect_to: Symbol) -> Expression:
         raise NotImplementedError()
+
+    def __call__(self, *args, **kwargs):
+        return self.evaluate(args[0])
 
     def __add__(self, other):
         op = other if isinstance(other, Expression) else Constant(other)
@@ -54,7 +59,7 @@ class Expression:
 
 
 class Constant(Expression):
-    def __init__(self, value):
+    def __init__(self, value: float):
         self.value = value
 
     def evaluate(self, values):
@@ -68,7 +73,7 @@ class Constant(Expression):
 
 
 class Symbol(Expression):
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
 
     def evaluate(self, values):
@@ -83,9 +88,7 @@ class Symbol(Expression):
 
 
 class SumExpression(Expression):
-    def __init__(self, operands):
-        for i in operands:
-            assert isinstance(i, Expression)
+    def __init__(self, operands: list[Expression]):
         self.operands = operands
 
     def evaluate(self, values):
@@ -99,7 +102,7 @@ class SumExpression(Expression):
 
 
 class ProductExpression(Expression):
-    def __init__(self, operands):
+    def __init__(self, operands: list[Expression]):
         self.operands = operands
 
     def evaluate(self, values):
@@ -302,7 +305,7 @@ class TanhExpression(Expression):
         return math.tanh(self.x.evaluate(values))
 
     def _symdiff(self, respect_to):
-        return self.x._symdiff(respect_to) / (TanhExpression(self.x) * TanhExpression(self.x))
+        return self.x._symdiff(respect_to) / (CoshExpression(self.x) * CoshExpression(self.x))
 
     def __str__(self):
         return 'tanh(%s)' % self.x
