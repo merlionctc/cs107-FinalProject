@@ -141,20 +141,28 @@ class DivisionExpression(Expression):
         return '(%s)/(%s)' % (self.num, self.denom)
 
 
-class LogExpression(Expression):
-    def __init__(self, x: Expression, base: Expression = Constant(math.e)):
-        self.base = base
+def make_ln_expression(x):
+    '''
+    Handle the case where x is not an Expression.
+    '''
+    if isinstance(x, Expression):
+        return LnExpression(x)
+    # Hopefully it's a number.
+    return math.log(x)
+
+
+class LnExpression(Expression):
+    def __init__(self, x: Expression):
         self.x = x
 
     def evaluate(self, values):
-        return math.log(self.x.evaluate(values), self.base.evaluate(values))
+        return math.log(self.x.evaluate(values))
 
     def _symdiff(self, respect_to):
-        # TODO: This does not support the case where base is not Constant.
-        return 1 / (LogExpression(self.base) * self.x)
+        return self.x._symdiff(respect_to) / self.x
 
     def __str__(self):
-        return 'log[%s](%s)' % (self.base, self.x)
+        return 'ln(%s)' % self.x
 
 
 class PowerExpression(Expression):
@@ -167,7 +175,7 @@ class PowerExpression(Expression):
 
     def _symdiff(self, respect_to):
         return self * (
-            self.exponent._symdiff(respect_to) * LogExpression(self.base) + self.exponent * self.base._symdiff(
+            self.exponent._symdiff(respect_to) * LnExpression(self.base) + self.exponent * self.base._symdiff(
                 respect_to) / self.base)
 
     def __str__(self):

@@ -7,6 +7,7 @@ def symbols(names: str):
 
 def diff(expression, respect_to):
     if isinstance(expression, float):
+        # If it's a constant (not something wrapped by us), assume it's 0
         return 0
     return expression._symdiff(respect_to)
 
