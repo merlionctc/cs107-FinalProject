@@ -1,5 +1,4 @@
- #elementary functions
-import numpy as np
+#elementary functions
 
 ## Exponentials with natural base
 ## __pow__ can handle different bases 
@@ -22,6 +21,9 @@ def exp(var):
         new_node.val = np.e**var.val
         new_node.gradients = [np.e**var.val]
         return new_node
+
+    elif isinstance(var, Expression):
+        return PowerExpression(var)
     
     else:
         return np.e**var
@@ -45,6 +47,9 @@ def sin(var):
         new_node.inputs = [var]
         new_node.gradients = [np.cos(var.val)]
         return new_node
+
+    elif isinstance(var, Expression):
+        return SinExpression(var)
         
     else:
         return np.sin(var)
@@ -66,6 +71,10 @@ def cos(var):
         new_node.inputs = [var]
         new_node.gradients = [-np.sin(var.val)]
         return new_node
+
+    elif isinstance(var, Expression):
+        return CosExpression(var)
+
     else:
         return np.cos(var)
         
@@ -86,6 +95,9 @@ def tan(var):
         new_node.inputs = [var]
         new_node.gradients = [1/np.cos(var.val)**2]
         return new_node
+
+    elif isinstance(var, Expression):
+        return TanExpression(var)
 
     else:
         return np.tan(var)
@@ -108,6 +120,9 @@ def log(var):
         new_node.inputs = [var]
         new_node.gradients = [1/var.val]
         return new_node
+
+    elif isinstance(var, Expression):
+        return LogExpression(var)
     
     else:
         return np.log(var)
@@ -131,7 +146,11 @@ def logb(var, base):
         new_node = Node(np.log(var.val)/ np.log(base))
         new_node.inputs = [var]
         new_node.gradients = [1/var.val/np.log(base)]
-        return new_node   
+        return new_node
+
+    elif isinstance(var, Expression):
+        return LogExpression(var, base = Constant(base))
+
     else:
         return np.log(var) / np.log(base)
 
@@ -154,6 +173,9 @@ def sqrt(var):
         new_node.inputs = [var]
         new_node.gradients = [0.5/np.sqrt(var.val)]
         return new_node 
+
+    elif isinstance(var, Expression):
+        return PowerExpression(exponent=Constant(1/2), base = var)
 
     else:
         return np.sqrt(var)
@@ -178,6 +200,9 @@ def arcsin(var):
         new_node.gradients = [1 / np.sqrt(1 - var.val **2)]
         return new_node
 
+    elif isinstance(var, Expression):
+        return ArcsinExpression(var)
+
     else:
         return np.arcsin(var)
 
@@ -199,6 +224,9 @@ def arccos(var):
         new_node.gradients = [-1 / np.sqrt(1 - var.val**2)]
         return new_node
 
+    elif isinstance(var, Expression):
+        return ArccosExpression(var)
+
     else:
         return np.arccos(var)
 
@@ -219,6 +247,9 @@ def arctan(var):
         new_node.inputs = [var]
         new_node.gradients = [1 / (1 + var.val**2)]
         return new_node
+
+    elif isinstance(var, Expression):
+        return ArctanExpression(var)
 
     else:
         return np.arctan(var)
@@ -242,6 +273,9 @@ def sinh(var):
         new_node.gradients = [np.cosh(var.val)]
         return new_node
 
+    elif isinstance(var, Expression):
+        return SinhExpression(var)
+
     else:
         return np.sinh(var)
 
@@ -262,6 +296,9 @@ def cosh(var):
         new_node.inputs = [var]
         new_node.gradients = [np.sinh(var.val)]
         return new_node
+
+    elif isinstance(var, Expression):
+        return CoshExpression(var)
 
     else:
         return np.cosh(var)
@@ -284,6 +321,9 @@ def tanh(var):
         new_node.gradients = [(np.cosh(var.val)**2 - np.sinh(var.val)**2)/ (np.cosh(var.val)**2)]
         return new_node
 
+    elif isinstance(var, Expression):
+        return TanhExpression(var)
+
     else:
         return np.tanh(var)
 
@@ -297,7 +337,7 @@ def help_logistic(x, L=1, k=1, x0=0):
 def logistic(var, L=1, k=1, x0=0):
     """Calculate the logistic of the input
         Keyword arguments:
-        L: he curve's maximum value
+        L: the curve's maximum value
         k: the logistic growth rate or steepness of the curve
         x0: the x value of the sigmoid's midpoint
         var: a dual number,node object, or a real number
@@ -317,10 +357,14 @@ def logistic(var, L=1, k=1, x0=0):
         new_node.inputs = [var]
         new_node.gradients = [temp * (1 - temp )]
         return new_node
-    
+
+    elif isinstance(var, Expression):
+        return L/(1 + exp(-k*(var-x0)))
+
     else:
         return help_logistic(var, L, k, x0)
 
 
 from autodiff.dual import *
 from autodiff.node import *
+from autodiff.symbolic.expression import *

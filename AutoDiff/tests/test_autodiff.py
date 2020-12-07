@@ -1,14 +1,12 @@
 #import sys
 #sys.path.append('AutoDiff/src/autodiff')
 
-import pytest
+import numpy as np
 
 from autodiff.dual import *
-from autodiff.model import *
 from autodiff.elementary import *
+from autodiff.model import *
 from autodiff.node import *
-import numpy as np
-import math
 
 
 def test_forward_autodiff():
@@ -29,6 +27,7 @@ def test_forward_autodiff():
         assert fwd_test_1.get_value() == [14]
         assert fwd_test_2.get_value() == [89]
 
+
     def test_get_der():
         # test single func
         x1 = Dual(val = np.pi, der=1, loc = 0, length = 3)
@@ -47,7 +46,7 @@ def test_forward_autodiff():
         assert np.allclose(fwd_test_2.get_der(z1), np.array([[1.],[0.]]))
         assert np.allclose(fwd_test_2.get_der(y1, x1), np.array([[-4.00000000e+00,-3.00000000e+00],[-1.12481984e-32,-6.00000000e+00]]))
 
-    
+
     def test_jacobian():
         x = Dual(val = np.pi, der=1, loc = 0, length = 3)
         y = Dual(val = 2, der=1, loc = 1, length = 3)
@@ -56,7 +55,7 @@ def test_forward_autodiff():
         f2 = 3 * sin(x) + 8 * y ** 3 + z**2
         fwd = Forward([f1, f2])
         assert np.allclose(fwd.get_jacobian(), np.array([[ 3., 8.,-1.],[-3.,96.,10.]]))
-        
+
     #def test_get_expression():
         #try:
            # x = Dual(val = np.pi, der=1, loc = 0, length = 3)
@@ -67,7 +66,7 @@ def test_forward_autodiff():
            # fwd_f3.get_expression()
         #except:
             #pass
-        
+
     test_get_value()
     test_get_der()
     test_jacobian()
@@ -88,7 +87,7 @@ def test_reverse_autodiff():
         z2 = Node(val = 5)
 
         f2 = 3 * sin(x2) + 8 * y2 ** 3 + z2**2
-        
+
         rvs_test = Reverse([f1, f2])
 
 
@@ -99,13 +98,13 @@ def test_reverse_autodiff():
         x = Node(val = np.pi)
         y = Node(val = np.pi/2)
         z = Node(val = 0)
-        
+
         f3 = 3 * sin(x) + 4 * cos(y) + exp(z)
         rvs_f3 = Reverse([f3], [x, y, z])
         assert (rvs_f3.get_der() == np.array([-3, -4,  1.])).all()
         assert (rvs_f3.get_der([z]) == np.array([1])).all()
         assert (rvs_f3.get_der([x,y]) == np.array([-3, -4])).all()
-    
+
     def test_jacobian():
         '''
         x = Node(val = np.pi)
@@ -149,14 +148,14 @@ def test_simplify():
         assert z2.der == (np.log(2) + 1)*2**2
         assert z3.val == 1
         assert z3.der == 0
-        
-    
+
+
     def test_simplify_vector():
-        x = Dual(2, 1, loc = 0, length = 2)  
+        x = Dual(2, 1, loc = 0, length = 2)
         y = Dual(1, 1, loc = 1, length = 2)
         z1 = (x+y)*x
         z2 = x/x + 3*y
-        z3 = x**(2*x + 3*y) 
+        z3 = x**(2*x + 3*y)
         assert z1.val == 6
         assert (z1.der == np.array([5,2])).all()
         assert z2.val == 4
@@ -164,7 +163,7 @@ def test_simplify():
         assert z3.val == 2**7
         assert (z3.der == np.array([2**7*(2*np.log(2)+ 7/2), 2**7*3*np.log(2)])).all()
         print("z3 is ", z3)
-               
+
     test_simplify_num()
     test_simplify_vector()
     print("Pass simplify tests!")

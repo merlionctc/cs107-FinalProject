@@ -199,5 +199,5 @@ class Reverse(AutoDiff):
         
         Examples
         -------- 
-        >>> fwd.get_jacobian()"""
+        >>> fwd.get_jacobian() """
         return self.get_der(self.var_lst)

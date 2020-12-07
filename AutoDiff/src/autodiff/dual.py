@@ -85,7 +85,6 @@ class Dual():
         >>> print(z)
         Dual(value=2, derivative=1)
         """
-
         return "{class_name}(value={value}, derivative={der})".format(class_name=type(self).__name__, value=self.val, der=self.der)
         
     ### dunder method of math operation###
@@ -106,8 +105,6 @@ class Dual():
         >>> print(z)
         Dual(value=2, derivative=1)
         """
-
-
         return Dual(self.val, self.der)
 
     def __neg__(self):
@@ -558,7 +555,7 @@ class Dual():
         -------- 
         >>> x =  Dual(2,1)
         >>> y =  Dual(1,1)
-        >>> print(x>= y)
+        >>> print(x >= y)
         True
         """
         try:
