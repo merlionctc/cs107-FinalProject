@@ -39,20 +39,33 @@ class Node():
 
 
 		POST:
-			 - val: float, int, or a list of int/float
+			 - val: float, int, or array of int/float
              - name: str
-			 - der: ???
+			 - der: array, When the input of the operation has multiple variables, 
+                the derivatives of each variable will be listed in the array with the order, this is not printed
 
 		EXAMPLES
 		=========
-        NEED EXAMPLES
-
+        # Single variable for the target function(s)
+		>>> x = Node(1) 
+        >>> x
+		Node(value = 1, name=new)
+		# Multiple variables for the target function(s)
+        >>> x1 = Node(val = 1)
+        >>> y1 = Node(val = 2)
+        >>> z1 = Node(val = 5)
+        >>> f1 = 3 * x1 + 4 * y1 * 2 - z1
+        >>> f1
+        Node(value = 14, name = new)
 		"""
         self.inputs = []
         self.val = val
         self.der = der
         self.gradients = []
         self.name = name
+    
+    def __hash__(self):
+        return hash(self.gradients.append(str(self.val)+str(self.der)+self.name))
     
     def __repr__(self):
         """ Prints self in the form of Node(value = [val], name = "name")
@@ -74,7 +87,7 @@ class Node():
         """        
         return "{class_name}(value={value}, name={name})\n".format(class_name=type(self).__name__, value=self.val, name = self.name)
     
-    # dunder method for negation
+    
     def __pos__(self):
         """ Returns the positive of self
         
