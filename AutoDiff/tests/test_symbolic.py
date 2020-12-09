@@ -102,14 +102,22 @@ def test_symbolic():
 
     def test_pow():
         x = symbols('x')
+        contant1 = Constant(3)
+        contant2 = Constant(5)
         f1 = x ** (x ** 2)  # x^(x^2)
         f2 = 3 ** x
         f3 = (x ** 2) ** (x ** 2)
+        f4 = x ** x
+        f5 =  contant1**contant2
         values = {x: 3}
+        values_2 = {x: 4}
+        
         assert math.isclose(f1.evaluate(values), 3 ** 9)
         assert math.isclose(diff(f1, x).evaluate(values), 3 ** 9 * (3 + 2 * 3 * log(3)))
         assert math.isclose(diff(f2, x).evaluate(values), log(3) * 3 ** 3)
         assert math.isclose(diff(f3, x).evaluate(values), 2 * 3 * (9 ** 9) * (log(9) + 1))
+        assert math.isclose(diff(f4, x).evaluate(values_2), 4**4*(log(4)+1))
+        assert math.isclose(diff(f5, x).evaluate(values_2), 0)
 
     def test_sin():
         x = symbols('x')
@@ -173,6 +181,20 @@ def test_symbolic():
         values = {x: 3}
         assert math.isclose(f.evaluate(values), tanh(9))
         assert math.isclose(diff(f, x).evaluate(values), 6 / (cosh(9) * cosh(9)))
+    
+    def test_sqrt():
+        x = symbols('x')
+        f = sqrt(x)
+        values = {x: 3}
+        assert math.isclose(f.evaluate(values), np.sqrt(3))
+        assert math.isclose(diff(f, x).evaluate(values), 1/2/np.sqrt(3))
+    
+    def test_neg():
+        x = symbols('x')
+        f = -x
+        values = {x: 3}
+        assert math.isclose(f.evaluate(values), -3)
+        assert math.isclose(diff(f, x).evaluate(values), -1)
 
     test_get_value()
     test_get_der()
@@ -194,6 +216,8 @@ def test_symbolic():
     test_sinh()
     test_cosh()
     test_tanh()
+    test_sqrt()
+    test_neg()
     print("Pass symbolic diff!")
 
 

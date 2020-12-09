@@ -3,6 +3,7 @@ import numpy as np
 class Dual():
     """
 	Creates a Dual class supporting custom operations for Automatic Differentiation (AD).
+    
 	Attributes
 	==========
 	val : int or float
