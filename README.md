@@ -182,7 +182,7 @@ quitting
 >>>quit()
 ```
 
-#### 3 Reverse Symbolic Mode & Higher Order Derivative
+### 3 How to Use (Reverse Symbolic Mode & Higher Order Derivative)
 
 First Step: User instantiate variables.
 You can choose to initialize by wrapper method for multiple variables together.
@@ -256,12 +256,12 @@ print(diff(f2, x, y))
 
 ## Broader Impact and Inclusivity Statement 
 
-### Broader Impact
+### 1 Broader Impact
 
 TODO
 
 
-### Software Inclusivity
+### 2 Software Inclusivity
 This package welcomes and encourage participation and usage from a global community. 
 Just as Python Software's Diversity Statement indicated, *the Python community is based on mutual respect, tolerance, and encouragement, and we are working to help each other live up to these principles.* We, as the developer of this AutoDiff package, also want our user group to be more diverse: whoever you are, and whatever your background, we welcome you to use our package.
 This software package is built based upon the diversity perspective on Python broader community. We strongly believe that embrace diverse community to use our package brings new blood and perspective, making our user group stronger and more vibrant. A diverse user group where all users treat each other with respect has more potential contributors and more sources for fresh ideas.
