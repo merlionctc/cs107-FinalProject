@@ -258,11 +258,18 @@ print(diff(f2, x, y))
 
 ### 1 Broader Impact
 
-TODO
+As a open source library, it is important to care about the broader impact on the social community, especially in terms of diversity, ethical and social impact. 
+
+Above all, we, the developers for AutoDiff, spare no effort to encourage the autonomy and freedom of using and contributing to the library from diversified groups, especially for the women, people with disability and working parents. We hope our library can provide great motivation and encouragement for the minority groups in contributors and for other open source library, contributing to the diversity in the whole open source community.
+
+Additionally, the open source Auto Differentiation library may also be misused in some scenarios and cause some ethical issues. For one thing, there may be some students or researchers to overuse this library instead of calculating the derivatives by hand. Although AutoDiff can be efficient and powerful for solving complicated gradient problems, sometimes it is also vital for students to learn how to conduct the derivatives by hand, and for mathematical/physical researchers to discover drawbacks and make breakthroughs. Therefore, it should be notified that AutoDiff is only a tool, but not a bible to entirely depend on. For the other, there may be some people using AutoDiff for business purpose or offering it for sale, which is entirely against our purpose and privacy rules. It should be warned that our library is designed for academical purpose, increasing the efficiency of Machine Learning tasks and other gradient-related problems.
+
+
+
 
 
 ### 2 Software Inclusivity
-This package welcomes and encourage participation and usage from a global community. 
+Software development, like many fields of science, has been prosperous because the contribution of people from a variety of backgrounds. This package welcomes and encourage participation and usage from a global community. 
 Just as Python Software's Diversity Statement indicated, *the Python community is based on mutual respect, tolerance, and encouragement, and we are working to help each other live up to these principles.* We, as the developer of this AutoDiff package, also want our user group to be more diverse: whoever you are, and whatever your background, we welcome you to use our package.
 This software package is built based upon the diversity perspective on Python broader community. We strongly believe that embrace diverse community to use our package brings new blood and perspective, making our user group stronger and more vibrant. A diverse user group where all users treat each other with respect has more potential contributors and more sources for fresh ideas.
 We also welcomes users from all language background. Mathematics has no boundary.
@@ -281,5 +288,17 @@ We will also rename our main branch to `main`.
 For working parents, we will accomodate for their time if they would like a closer contact and discuss about our package implementation. 
 For people from different countries or non-native English speakers, rural communities, we would be willing to receive their feedback and contribution through all channels. We could be reached via email, phone, letter or any other means plausible.
 We will also use translator to help accomodate for language barriers if it is needed.
+
+For people with disabilities, we will be happy to provide accommodations, inluding but not limiting to sign language explanation and hearing assitance. We are happy to go with more detail if you feel needed.
+
+We want to make our biggest effort to create an inclusive learning and communication environment for all the users and members from the science community that supports a diversity of thoughts, perspectives, and experiences, and honors the identities.
+To help achieve it:
+
+* If you feel anything such as the name and the written records that disturb you in this software, please let us know.
+
+* If you feel anything improper in our future maintanance and development process, please let us know
+
+* As we welcome everyone to contribute, we shall all strive to honor the diversity of each other
+
 
 
