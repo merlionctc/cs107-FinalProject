@@ -12,6 +12,12 @@ Group Member:
 * Wenqi Chen (wenqichen@g.harvard.edu)
 * Yujie Cai (ycai@g.harvard.edu)
 
+## Design Diagram
+
+![Design Diagram](design_diagram.png)
+
+
+
 ## Get Started
 
 
