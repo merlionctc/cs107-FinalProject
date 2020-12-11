@@ -30,6 +30,11 @@ class Expression:
         Returns
         ------- 
         the numerical value (float) of the expression
+
+        Examples
+        -------
+        >>> evaluate({x:1})
+        NotImplementedError
         '''
         raise NotImplementedError()
 
@@ -52,8 +57,9 @@ class Expression:
 
     def __call__(self, *args, **kwargs):
         '''Special method enabling Expression instance to use evalute method and returns the derivative value of the instance
-
-        '''        
+        
+        '''       
+         
         return self.evaluate(args[0])
 
     def __add__(self, other):

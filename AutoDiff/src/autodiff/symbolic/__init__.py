@@ -4,6 +4,17 @@ from .expression import Symbol, Expression
 
 
 def symbols(names: str):
+    """
+    instaniate several symbols together
+    Args:
+        names: str of names
+
+    Returns:
+        several symbols
+
+    Examples:
+    >>> x, y, z = symbols("x y z")
+    """
     l = names.split()
     if len(l) > 1:
         return (Symbol(name) for name in l)
@@ -21,8 +32,12 @@ def diff(expr: Expression, *args):
         derivative expression
 
     Examples:
-        diff(f, x, x)
-        diff(f, x)
+    >>> x = Symbol('x')
+    >>> f = x**2
+    >>> diff(f, x, x).evaluate({x:1})
+    2
+    >>> print(diff(f, x))
+    ((1)*(2))*((x)^(1))
     """
     if not isinstance(expr, Expression):
         # If it's a constant (not something wrapped by us), assume it's 0
@@ -41,6 +56,7 @@ def get_jacobian_expression(expressions, respect_to_lst):
 
     Returns:
         Jacobian matrix
+
     """
     return [[diff(i, j) for j in respect_to_lst] for i in expressions]
 
@@ -57,6 +73,10 @@ def get_jacobian_value(expressions, respect_to_lst, values):
         Jacobian matrix
 
     Examples:
-        get_jacobian_value([f3, f4], [x, y, z], {x: math.pi, y: math.pi / 2, z: 0})
+    >>> x,y = symbols('x y')
+    >>> f1 = x**2
+    >>> f2 = 3*y
+    >>> get_jacobian_value([f1, f2], [x, y], {x: 2, y: 4})
+    [[4, 0], [0, 3]]
     """
     return [[col.evaluate(values) for col in row] for row in get_jacobian_expression(expressions, respect_to_lst)]
