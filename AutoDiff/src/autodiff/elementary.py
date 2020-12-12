@@ -16,7 +16,18 @@ def exp(var):
         
     Examples
     -------- 
-    >>> exp()
+    >>> x = Dual(1, 1)
+    >>> assert exp(x).val == np.e
+    True
+    >>> assert exp(x).der == np.e
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> assert exp(x).evaluate(val) == np.e
+    True
+    >>> assert diff(exp(x), x).evaluate(val) == np.e
+    True
+
     """
     if isinstance(var, Dual):
         val = np.e ** var.val
@@ -46,7 +57,17 @@ def sin(var):
         
     Examples
     -------- 
-    >>> sin()
+    >>> x = Dual(np.pi, 1)
+    >>> assert sin(x).val == 0
+    True
+    >>> assert sin(x).der == -1
+    True
+    >>> x = symbols('x')
+    >>> val = {x: np.pi}
+    >>> assert sin(x).evaluate(val) == 0
+    True
+    >>> assert diff(sin(x), x).evaluate(val) == -1
+    True
     """
     if isinstance(var, Dual):
         der = np.cos(var.val) * var.der
@@ -73,7 +94,17 @@ def cos(var):
         
     Examples
     -------- 
-    >>> cos()
+    >>> x = Dual(np.pi, 1)
+    >>> assert cos(x).val == -1
+    True
+    >>> assert cos(x).der == 0
+    True
+    >>> x = symbols('x')
+    >>> val = {x: np.pi}
+    >>> assert cos(x).evaluate(val) == -1
+    True
+    >>> assert diff(cos(x), x).evaluate(val) == 0
+    True
     """
     if isinstance(var, Dual):
         der = -1 * np.sin(var.val) * var.der
@@ -100,7 +131,16 @@ def tan(var):
         
     Examples
     -------- 
-    >>> tan()
+    >>> x = Dual(np.pi, 1)
+    >>> assert tan(x).val == np.tan(np.pi)
+    True
+    >>> assert tan(x).der == 1 / np.cos(x.val) ** 2
+    >>> x = symbols('x')
+    >>> val = {x: np.pi}
+    >>> assert tan(x).evaluate(val) == np.tan(np.pi)
+    True
+    >>> assert diff(tan(x), x).evaluate(val) == 1 / np.cos(np.pi) ** 2
+    True
     """
     if isinstance(var, Dual):
         der = 1 / np.cos(var.val) ** 2 * var.der
@@ -128,7 +168,17 @@ def log(var):
         
     Examples
     -------- 
-    >>> log()
+    >>> x = Dual(1, 1)
+    >>> assert log(x).val == 0
+    True
+    >>> assert log(x).der == 1
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> assert log(x).evaluate(val) == 0
+    True
+    >>> assert diff(log(x), x).evaluate(val) == 1
+    True
     """
     if isinstance(var, Dual):
         val = np.log(var.val)
@@ -156,7 +206,17 @@ def logb(var, base):
         
     Examples
     -------- 
-    >>> logb(<var>,base)
+    >>> x = Dual(10, 1)
+    >>> assert logb(x, 10).val == 1
+    True
+    >>> assert logb(x, 10).der == 1 / 10 / np.log(10)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 10}
+    >>> assert logb(x, 10).evaluate(val) == -1
+    True
+    >>> assert diff(logb(x, 10), x).evaluate(val) == 1 / 10 / np.log(10)
+    True
     """
     if isinstance(var, Dual):
         val = np.log(var.val) / np.log(base)
@@ -185,7 +245,17 @@ def sqrt(var):
         
     Examples
     -------- 
-    >>> sqrt()
+    >>> x = Dual(4, 1)
+    >>> assert sqrt(x).val == 2
+    True
+    >>> assert sqrt(x).der == 0.25
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 4}
+    >>> assert sqrt(x).evaluate(val) == 2
+    True
+    >>> assert diff(sqrt(x), x).evaluate(val) == 0.5 / 2
+    True
     """
     if isinstance(var, Dual):
         der = 0.5 / np.sqrt(var.val) * var.der
@@ -213,7 +283,17 @@ def arcsin(var):
         
     Examples
     -------- 
-    >>> arcsin()
+    >>> x = Dual(2, 1)
+    >>> assert arcsin(x).val == np.arcsin(2)
+    True
+    >>> assert arcsin(x).der == 1 / np.sqrt(1 - 2** 2)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 2}
+    >>> assert arcsin(x).evaluate(val) == np.arcsin(2)
+    True
+    >>> assert diff(arcsin(x), x).evaluate(val) == 1 / np.sqrt(1 - 2** 2)
+    True
     """
     if isinstance(var, Dual):
         der = 1 / np.sqrt(1 - var.val ** 2) * var.der
@@ -240,7 +320,17 @@ def arccos(var):
         
     Examples
     -------- 
-    >>> arccos()
+    >>> x = Dual(2, 1)
+    >>> assert arccos(x).val == np.arccos(2)
+    True
+    >>> assert arccos(x).der == -1 / np.sqrt(1 - 2** 2)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 2}
+    >>> assert arccos(x).evaluate(val) == np.arccos(2)
+    True
+    >>> assert diff(arccos(x), x).evaluate(val) == -1 / np.sqrt(1 - 2** 2)
+    True
     """
     if isinstance(var, Dual):
         der = -1 / np.sqrt(1 - var.val ** 2) * var.der
@@ -267,7 +357,17 @@ def arctan(var):
         
     Examples
     -------- 
-    >>> arctan()
+    >>> x = Dual(1, 1)
+    >>> assert arctan(x).val == np.arctan(1)
+    True
+    >>> assert arctan(x).der == 1 / (1 + 1)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> assert arctan(x).evaluate(val) == np.arctan(1)
+    True
+    >>> assert diff(arctan(x), x).evaluate(val) == 1 / (1 + 1)
+    True
     """
     if isinstance(var, Dual):
         der = 1 / (1 + var.val ** 2) * var.der
@@ -295,7 +395,17 @@ def sinh(var):
 
     Examples
     -------- 
-    >>> sinh()
+    >>> x = Dual(1, 1)
+    >>> assert sinh(x).val == np.sinh(1)
+    True
+    >>> assert sinh(x).der == np.cosh(1)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> assert sinh(x).evaluate(val) == np.sinh(1)
+    True
+    >>> assert diff(sinh(x), x).evaluate(val) == np.cosh(1)
+    True
     """
     if isinstance(var, Dual):
         der = np.cosh(var.val) * var.der
@@ -322,7 +432,17 @@ def cosh(var):
 
     Examples
     -------- 
-    >>> cosh()
+    >>> x = Dual(1, 1)
+    >>> assert cosh(x).val == np.cosh(1)
+    True
+    >>> assert cosh(x).der == np.sinh(1)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> assert cosh(x).evaluate(val) == np.cosh(1)
+    True
+    >>> assert diff(cosh(x), x).evaluate(val) == np.sinh(1)
+    True
     """
     if isinstance(var, Dual):
         der = np.sinh(var.val) * var.der
@@ -349,7 +469,17 @@ def tanh(var):
 
     Examples
     -------- 
-    >>> tanh()
+    >>> x = Dual(1, 1)
+    >>> assert tanh(x).val == np.tanh(1)
+    True
+    >>> assert tanh(x).der == (np.cosh(1) ** 2 - np.sinh(1) ** 2) / (np.cosh(1) ** 2)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> assert tanh(x).evaluate(val) == np.tanh(1)
+    True
+    >>> assert diff(tanh(x), x).evaluate(val) == (np.cosh(1) ** 2 - np.sinh(1) ** 2) / (np.cosh(1) ** 2)
+    True
     """
     if (isinstance(var, Dual)):
         der = var.der * (np.cosh(var.val) ** 2 - np.sinh(var.val) ** 2) / (np.cosh(var.val) ** 2)
@@ -379,8 +509,11 @@ def help_logistic(x, L=1, k=1, x0=0):
     Returns
     ------- 
     the losgitics value, default to standard: tanh{<var>} 
-    
-    
+
+    Examples
+    -------- 
+    >>> help_logistic(x)
+    0.7310585786300049
     """
     return L / (1 + np.exp(-k * (x - x0)))
 
@@ -397,12 +530,24 @@ def logistic(var, L=1, k=1, x0=0):
         
     Returns
     ------- 
-    the losgitics value, default to standard: 1/1+e^{-<var>} 
+    the logitics value, default to standard: 1/1+e^{-<var>} 
     
     Examples
     -------- 
-    >>> logistics()   
-    >>> logistics(<var>,L=2,k=1,x0=5 )
+    >>> x = Dual(1, 1)
+    >>> temp = help_logistic(1, L=2,k=1,x0=5)
+    >>> logistic(x,L=2,k=1,x0=5 ).val
+    0.03597241992418312
+    >>> assert logistic(x,L=2,k=1,x0=5 ).der == temp * (1 - temp/2)
+    True
+    >>> x = symbols('x')
+    >>> val = {x: 1}
+    >>> logistic(x,L=2,k=1,x0=5 ).evaluate(val)
+    0.03597241992418312
+    >>> assert diff(logistic(x,L=2,k=1,x0=5 ), x).evaluate(val) == temp * (1 - temp/2)
+    True
+    >>> logistic(1,L=2,k=1,x0=5 )
+    0.03597241992418312
     """
     if isinstance(var, Dual):
         temp = help_logistic(var.val, L, k, x0)
