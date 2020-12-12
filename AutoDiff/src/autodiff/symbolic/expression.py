@@ -31,10 +31,6 @@ class Expression:
         ------- 
         the numerical value (float) of the expression
 
-        Examples
-        -------
-        >>> evaluate({x:1})
-        NotImplementedError
         '''
         raise NotImplementedError()
 
@@ -74,6 +70,15 @@ class Expression:
         ------- 
         an sum expression object, the symbolic representation of the of addition(+) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = x + y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        2
+        >>> diff(f,x).evaluate(val)
+        1
         '''        
         op = other if isinstance(other, Expression) else Constant(other)
         return SumExpression([self, op])
@@ -90,6 +95,15 @@ class Expression:
         ------- 
         an sum expression object, the symbolic representation of the of addition(+) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = 7 + x + y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        9
+        >>> diff(f,x).evaluate(val)
+        1
         '''        
         return self + other
 
@@ -105,7 +119,16 @@ class Expression:
         ------- 
         an sum expression object, the symbolic representation of the of substraction(-) for two objects
 
-        '''        
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = x - y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        0
+        >>> diff(f,x).evaluate(val)
+        1
+        '''       
         op = other if isinstance(other, Expression) else Constant(other)
         return SumExpression([self, ProductExpression([Constant(-1), op])])
 
@@ -120,7 +143,17 @@ class Expression:
         Returns
         ------- 
         an sum expression object, the symbolic representation of the of substraction(-) for two objects
-
+        
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> z = 7
+        >>> f = 7 - x + y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        7
+        >>> diff(f,x).evaluate(val)
+        -1
         '''        
         op = other if isinstance(other, Expression) else Constant(other)
         return op - self
@@ -137,6 +170,15 @@ class Expression:
         ------- 
         an product expression object, the symbolic representation of the of multiplication(*) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = x * y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        1
+        >>> diff(f,x).evaluate(val)
+        1
         '''        
         op = other if isinstance(other, Expression) else Constant(other)
         return ProductExpression([self, op])
@@ -153,6 +195,16 @@ class Expression:
         ------- 
         an product expression object, the symbolic representation of the of multiplication(*) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> z = 7
+        >>> f = z * x * y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        7
+        >>> diff(f,x).evaluate(val)
+        7
         '''        
         return self * other
 
@@ -168,7 +220,16 @@ class Expression:
         ------- 
         an division expression object, the symbolic representation of the of division(/) for two objects
 
-        '''        
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = x / y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        1
+        >>> diff(f,x).evaluate(val)
+        1
+        '''       
         op = other if isinstance(other, Expression) else Constant(other)
         return DivisionExpression(self, op)
 
@@ -184,6 +245,16 @@ class Expression:
         ------- 
         an division expression object, the symbolic representation of the of division(/) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> z = 10
+        >>> f = z / y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        10
+        >>> diff(f,y).evaluate(val)
+        -10
         '''        
         op = other if isinstance(other, Expression) else Constant(other)
         return DivisionExpression(op, self)
@@ -200,6 +271,15 @@ class Expression:
         ------- 
         an power expression object, the symbolic representation of the of exponentiation (**) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = x ** y
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        1
+        >>> diff(f,x).evaluate(val)
+        1
         '''     
         op = power if isinstance(power, Expression) else Constant(power)
         return PowerExpression(base=self, exponent=op)
@@ -216,6 +296,15 @@ class Expression:
         ------- 
         an power expression object, the symbolic representation of the of exponentiation (**) for two objects
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = 2 ** x
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        2
+        >>> assert diff(f,x).evaluate(val) == np,log(2)*2
+        True    
         '''     
         op = other if isinstance(other, Expression) else Constant(other)
         return PowerExpression(base=op, exponent=self)
@@ -231,6 +320,15 @@ class Expression:
         ------- 
         an symbolic representation of the of object with negative (-) sign
 
+        Examples
+        -------
+        >>> x, y = symbols("x y")
+        >>> f = -x
+        >>> val = {x:1, y:1}
+        >>> f.evaluate(val)
+        -1
+        >>> diff(f,x).evaluate(val)
+        -1
         '''   
         return self * -1
 
@@ -259,9 +357,10 @@ class Constant(Expression):
 		value : float
 			  The value of value of the constant
 
+        Example
+        ------
+        >>> x = Constant(10)
 		"""
-
-
         self.value = value
 
     def evaluate(self, values):
@@ -275,6 +374,12 @@ class Constant(Expression):
         Returns
         ------- 
         the numerical value (float) of the constant
+
+        Example
+        -------
+        >>> x = Constant(10)
+        >>> x.evaluate({})
+        10
         '''        
         return self.value
 
@@ -289,7 +394,13 @@ class Constant(Expression):
         Returns
         ------- 
         the symbolic representation of the derivative of the constant, which is zero, an expression
-
+        
+        Examples
+        -------
+        >>> x = Constant(10)
+        >>> f = x**2
+        >>> f._symdiff(x).evaluate({})
+        0
         '''        
         return Constant(0)
 
@@ -304,6 +415,12 @@ class Constant(Expression):
         ------- 
         str version of the value of constant
 
+        Examples
+        -------
+        >>> x = Constant(10)
+        >>> f = x**2
+        >>> str(f)
+        '(10)^(2)'
         '''     
 
         return str(self.value)
@@ -324,6 +441,9 @@ class Symbol(Expression):
 		=======
 		name: str, the symbol of variable (x,y,z, etc.)
 
+        Example
+        ------
+        >>> x = Symbol('x')
 		"""
 
         self.name = name
@@ -339,6 +459,12 @@ class Symbol(Expression):
         Returns
         ------- 
         the corresponding numerical value (float) of the variable symbol
+
+        Example
+        ------
+        >>> x = Symbol('x')
+        >>> x.evaluate({x: 1})
+        1
         '''  
         assert self in values
         return values[self]
@@ -357,6 +483,12 @@ class Symbol(Expression):
         if orthongal: returns a constant object 0
         if the direction matches: returns  a constant object of 1
 
+        Example
+        ------
+        >>> x = Symbol('x')
+        >>> f = x**2
+        >>> f._symdiff(x).evaluate({x:3})
+        6
         '''   
         return Constant(1) if respect_to is self else Constant(0)
 
@@ -371,6 +503,12 @@ class Symbol(Expression):
         ------- 
         str version of a variable symbol, i.e.the name attribute
 
+        Example
+        ------
+        >>> x = Symbol('x')
+        >>> f = x**2
+        >>> str(f)
+        '(x)^(2)'
         '''     
         return self.name
 
